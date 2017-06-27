@@ -11,8 +11,8 @@ add_compile_options(-std=c++11)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-roscpp
-roslib)
+std_msgs
+roscpp)
 
 ###################################
 ## catkin specific configuration ##
@@ -26,7 +26,8 @@ roslib)
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES openpose_ros
-#  CATKIN_DEPENDS other_catkin_pkg
+  CATKIN_DEPENDS std_msgs 
+  				 roscpp
 #  DEPENDS system_lib
 )
 
