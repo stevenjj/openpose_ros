@@ -116,16 +116,16 @@ catkin_package(
 include_directories(
 # include
 # ${catkin_INCLUDE_DIRS}
- /home/stevenjj/openpose/include
- /home/stevenjj/openpose/src 
+ openpose/include
+ openpose/src 
  /usr/local/cuda/include 
- /home/stevenjj/openpose/3rdparty/caffe/distribute/include
+ openpose/3rdparty/caffe/distribute/include
 )
 add_definitions(-DUSE_CAFFE)
 
-FIND_LIBRARY(OPENPOSE_LIBRARY openpose /home/stevenjj/openpose/build/lib)
-FIND_LIBRARY(CAFFE_LIBRARY caffe /home/stevenjj/openpose/3rdparty/caffe/distribute/lib)
-FIND_LIBRARY(CUDA_LIBRARY cuda /home/stevenjj/openpose/build/lib)
+FIND_LIBRARY(OPENPOSE_LIBRARY openpose openpose/build/lib)
+FIND_LIBRARY(CAFFE_LIBRARY caffe openpose/3rdparty/caffe/distribute/lib)
+FIND_LIBRARY(CUDA_LIBRARY cuda openpose/build/lib)
 FIND_LIBRARY(GFLAGS_LIBRARY gflags /usr/lib/x86_64-linux-gnu)
 FIND_LIBRARY(GLOG_LIBRARY glog /usr/lib/x86_64-linux-gnu)
 

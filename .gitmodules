@@ -1,3 +1,4 @@
 [submodule "openpose"]
 	path = openpose
 	url = https://github.com/CMU-Perceptual-Computing-Lab/openpose.git
+	ignore = dirty
