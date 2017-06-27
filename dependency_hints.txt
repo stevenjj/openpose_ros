@@ -1,0 +1,107 @@
+The following notes are the commands I used to install the NVIDIA bianry drivers, CUDA, cuDNN, and ROS Indigo.
+After doing these commands, openpose and its dependencies compiled for me quite easily.
+
+sudo apt-get update
+sudo apt-get upgrade
+
+# NVIDIA Titan XP Binary Driver Installation
+
+Installed the following driver for NVIDIA Titan XP: http://www.geforce.com/drivers/results/117741
+Following the instructions at https://ubuntuforums.org/showthread.php?t=2081649 using the binary instructions
+
+1) Uninstall previous nvidia drivers
+sudo apt-get purge nvidia-current nvidia-settings
+2) sudo service lightdm stop
+
+3) ctrl-alt-f1
+4) Login
+5) Then switch to the directory where your drivers are 
+
+cd Downloads
+
+6) Then install the driver:
+
+sudo ./N
+# Fix no-TTY terminal on ctl-alt-F1 with Nvidia drivers
+
+https://forums.linuxmint.com/viewtopic.php?t=168108
+
+sudo nano /etc/default/grub
+
+Uncomment the lines
+
+#GRUB_TERMINAL=console
+
+#GRUB_GFXMODE=640x480
+
+And add nomodeset voa:
+
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash nomodeset"
+Cuda 8.0 Install
+
+Download the .run installer from https://developer.nvidia.com/cuda-downloads (NOT THE DEB file)
+
+Perform the pre-installation instructions http://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#pre-installation-actions
+
+(so far, I am able to skip the pre-installation instructions)
+
+Following : http://www.insiderattack.net/2014/12/installing-cuda-toolkit-65-in-ubuntu.html
+
+# Install CUDA via:
+
+sudo chmod a+x cuda_8.0....run 
+sudo ./cuda_8.0.....run
+
+Say no to installing the driver (since we already did it). Say yes to everything else.
+
+Then perform the post installation instructions: (http://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#post-installation-actions)
+
+Add these to your ~/.bashrc
+
+export PATH=/usr/local/cuda-8.0/bin${PATH:+:${PATH}}
+
+export LD_LIBRARY_PATH=/usr/local/cuda-8.0/lib64\
+                         ${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+
+
+See if you can compile the examples:
+
+cd ~/NVIDIA_"examples"
+
+make -j8
+
+I had an error with g++ so I just installed it via:
+
+sudo apt-get install g++
+
+
+# Install cudann
+
+https://askubuntu.com/questions/767269/how-can-i-install-cudnn-on-ubuntu-16-04
+
+step 0: Install cuda from the standard repositories. (See How can I install CUDA on Ubuntu 16.04?)
+
+Step 1: Register an nvidia developer account and download cudnn here (about 80 MB)
+
+Step 2: Check where your cuda installation is. For the installation from the repository it is /usr/lib/... and /usr/include. Otherwise, it will be /usr/local/cuda/ or /usr/local/cuda-<version>. You can check it with which nvcc or ldconfig -p | grep cuda
+
+Step 3: Copy the files:
+
+$ cd folder/extracted/contents
+$ sudo cp -P include/cudnn.h /usr/include
+$ sudo cp -P lib64/libcudnn* /usr/lib/x86_64-linux-gnu/
+$ sudo chmod a+r /usr/lib/x86_64-linux-gnu/libcudnn*
+
+For a local install of cuda (not using deb)
+
+   82  cd Downloads/cuda/
+
+   84  sudo cp -P include/cudnn.h /usr/local/include/
+
+   90  sudo cp -P lib64/libcudnn* /usr/local/cuda-8.0/lib64/
+
+   91  sudo chmod a+r /usr/local/cuda-8.0/lib64/libcudnn*
+
+# Install ROS Indigo
+
+http://wiki.ros.org/indigo/Installation/Ubuntu
