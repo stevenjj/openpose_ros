@@ -190,6 +190,7 @@ bool detectPosesCallback(openpose_ros_msgs::GetPersons::Request& req, openpose_r
 
   for (size_t person_idx = 0; person_idx < num_people; person_idx++)
   {
+    ROS_INFO("    Person ID: %zu", person_idx);
     // Initialize all bodyparts with nan
     openpose_ros_msgs::PersonDetection person_msg;
     person_msg.nose = getNANBodypart();
@@ -215,9 +216,9 @@ bool detectPosesCallback(openpose_ros_msgs::GetPersons::Request& req, openpose_r
     for (size_t bodypart_idx = 0; bodypart_idx < num_bodyparts; bodypart_idx++)
     {
       size_t final_idx = 3*(person_idx*num_bodyparts + bodypart_idx);
-      openpose_ros_msgs::BodypartDetection bodypart_detection = getBodyPartDetectionFromArrayAndIndex(poses, final_idx);
 
       std::string body_part_string = g_bodypart_map[bodypart_idx];
+      openpose_ros_msgs::BodypartDetection bodypart_detection = getBodyPartDetectionFromArrayAndIndex(poses, final_idx);
 
       if (body_part_string == "Nose") person_msg.nose = bodypart_detection;
       else if (body_part_string == "Neck") person_msg.neck = bodypart_detection;
@@ -242,6 +243,10 @@ bool detectPosesCallback(openpose_ros_msgs::GetPersons::Request& req, openpose_r
       {
         ROS_ERROR("Unknown bodypart %s, this should never happen!", body_part_string.c_str());
       }
+
+      ROS_INFO("        body part: %s", body_part_string.c_str());
+      ROS_INFO("            (x, y, confidence): %i, %i, %f", bodypart_detection.x, bodypart_detection.y, bodypart_detection.confidence);
+
     }
     res.detections.push_back(person_msg);
   }
