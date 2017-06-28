@@ -140,8 +140,13 @@ bool detectPosesCallback(openpose_ros_msgs::GetPersons::Request& req, openpose_r
   ROS_INFO("g_pose_extractor->forwardPass done");
 
 
+
+
+  //const op::Array<float> poses;
+  const op::Array<float> poses = g_pose_extractor->getPoseKeypoints();  
+
   // VISUALIZE OUTPUT
-  const auto poseKeypoints = g_pose_extractor->getPoseKeypoints();
+  //const auto poseKeypoints = g_pose_extractor->getPoseKeypoints();
 
   op::Point<int> outputSize(1280, 720);
   op::CvMatToOpOutput cvMatToOpOutput{outputSize};
@@ -154,7 +159,8 @@ bool detectPosesCallback(openpose_ros_msgs::GetPersons::Request& req, openpose_r
   op::Array<float> outputArray;
   std::tie(scaleInputToOutput, outputArray) = cvMatToOpOutput.format(image);
 
-  poseRenderer->renderPose(outputArray, poseKeypoints);
+  //poseRenderer->renderPose(outputArray, poseKeypoints);
+  poseRenderer->renderPose(outputArray, poses);
   auto outputImage = opOutputToCvMat.formatToCvMat(outputArray);
 
 
@@ -167,10 +173,9 @@ bool detectPosesCallback(openpose_ros_msgs::GetPersons::Request& req, openpose_r
   //frameDisplayer.displayFrame(outputImage, 0); // Alternative: cv::imshow(outputImage) + cv::waitKey(0)
   image_skeleton_pub.publish(ros_image);
 
-  // VIsualizeOutput
+  // End Visualize Output
 
 
-  const op::Array<float> poses;
   if (!poses.empty() && poses.getNumberDimensions() != 3)
   {
     ROS_ERROR("pose.getNumberDimensions(): %d != 3", (int) poses.getNumberDimensions());
