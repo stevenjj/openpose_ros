@@ -6,7 +6,6 @@
 2. If everything succeeds, run `catkin build`, source your workspace then:
 ````
 roscd openpose_ros/openpose
-rosrun openpose_ros openpose_ros_openpose_node --image_dir examples/media/
+rosrun openpose_ros openpose_ros --image_dir examples/media/
 ````
 
-How silly of me. Somebody already did this with a rosservice call. Check it out: https://github.com/tue-robotics/openpose_ros

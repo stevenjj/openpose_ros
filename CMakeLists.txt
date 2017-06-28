@@ -3,16 +3,18 @@ project(openpose_ros)
 
 set(OPENPOSE_INCLUDE_DIRS openpose/include 
 						  openpose/src 
-						  /usr/local/cuda/include 
-						  openpose/3rdparty/caffe/distribute/include)
+						  openpose/3rdparty/caffe/distribute/include
+						  /usr/local/cuda/include)
 add_compile_options(-std=c++11)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-std_msgs
-roscpp)
+	std_msgs
+	roscpp
+	cv_bridge
+)
 
 ###################################
 ## catkin specific configuration ##
@@ -28,6 +30,7 @@ catkin_package(
 #  LIBRARIES openpose_ros
   CATKIN_DEPENDS std_msgs 
   				 roscpp
+  				 cv_bridge
 #  DEPENDS system_lib
 )
 
@@ -54,11 +57,14 @@ target_link_libraries(${PROJECT_NAME}_talker_node ${catkin_LIBRARIES}
 												  ${CAFFE_LIBRARY} 
 												  ${CUDA_LIBRARY})
 
-add_executable(${PROJECT_NAME}_openpose_node src/openpose.cpp)
-target_link_libraries(${PROJECT_NAME}_openpose_node ${catkin_LIBRARIES} 
+add_executable(${PROJECT_NAME} src/openpose.cpp)
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} 
 													${OPENPOSE_LIBRARY} 
 													${CAFFE_LIBRARY} 
 													${CUDA_LIBRARY} 
 													${GFLAGS_LIBRARY} 
 													${GLOG_LIBRARY})
 
+add_executable(openpose_ros_node src/openpose_ros_node.cpp)
+target_link_libraries(openpose_ros_node ${catkin_LIBRARIES} 
+										${OPENPOSE_LIBRARY}) 
