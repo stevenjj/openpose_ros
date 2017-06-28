@@ -20,6 +20,7 @@
 #include <openpose_ros_msgs/GetPersons.h>
 
 std::shared_ptr<op::PoseExtractor> g_pose_extractor;
+std::shared_ptr<op::PoseRenderer> poseRenderer;
 std::map<unsigned int, std::string> g_bodypart_map;
 op::Point<int> g_net_input_size;
 int g_num_scales;
@@ -111,22 +112,51 @@ bool detectPosesCallback(openpose_ros_msgs::GetPersons::Request& req, openpose_r
     ROS_ERROR("detectPosesCallback cv_bridge exception: %s", e.what());
     return false;
   }
+
   cv::Mat image = cv_ptr->image;
 
-/*  ROS_INFO_STREAM("Perform forward pass with the following settings:");
-  ROS_INFO_STREAM("- net_input_size: " << g_net_input_size);
+//  cv::Mat image = op::loadImage("/home/stevenjj/nstrf_ws/src/openpose_ros/openpose/examples/media/COCO_val2014_000000000192.jpg", CV_LOAD_IMAGE_COLOR);
+
+  ROS_INFO("Parsed image");
+  ROS_INFO_STREAM("Perform forward pass with the following settings:");
+  ROS_INFO_STREAM("- net_input_size: " << g_net_input_size.x << " " << g_net_input_size.y);
   ROS_INFO_STREAM("- num_scales: " << g_num_scales);
   ROS_INFO_STREAM("- scale_gap: " << g_scale_gap);
-  ROS_INFO_STREAM("- image_size: " << image.size())*/;
+  ROS_INFO_STREAM("- image_size: " << image.size());
   op::CvMatToOpInput cv_mat_to_op_input(g_net_input_size, g_num_scales, g_scale_gap);
 //  g_pose_extractor->forwardPass(cv_mat_to_op_input.format(image), image.size());
+
+  ROS_INFO("Initialized Net Size");
 
   op::Array<float> netInputArray;
   std::vector<float> scaleRatios;
   std::tie(netInputArray, scaleRatios) = cv_mat_to_op_input.format(image);
+  ROS_INFO("Preparing for forward pass");
   g_pose_extractor->forwardPass(netInputArray,  {image.cols, image.rows}, scaleRatios);
 
   ROS_INFO("g_pose_extractor->forwardPass done");
+
+
+  // VISUALIZE OUTPUT
+  const auto poseKeypoints = g_pose_extractor->getPoseKeypoints();
+
+  op::Point<int> outputSize(1280, 720);
+  op::CvMatToOpOutput cvMatToOpOutput{outputSize};
+  op::OpOutputToCvMat opOutputToCvMat{outputSize};
+
+  const op::Point<int> windowedSize = outputSize;
+  op::FrameDisplayer frameDisplayer{windowedSize, "OpenPose Example"};
+
+  double scaleInputToOutput;
+  op::Array<float> outputArray;
+  std::tie(scaleInputToOutput, outputArray) = cvMatToOpOutput.format(image);
+
+  poseRenderer->renderPose(outputArray, poseKeypoints);
+  auto outputImage = opOutputToCvMat.formatToCvMat(outputArray);
+  frameDisplayer.displayFrame(outputImage, 0); // Alternative: cv::imshow(outputImage) + cv::waitKey(0)
+
+  // VIsualizeOutput
+
 
   const op::Array<float> poses;
   if (!poses.empty() && poses.getNumberDimensions() != 3)
@@ -137,6 +167,8 @@ bool detectPosesCallback(openpose_ros_msgs::GetPersons::Request& req, openpose_r
 
   int num_people = poses.getSize(0);
   int num_bodyparts = poses.getSize(1);
+
+  ROS_INFO("num people: %d", num_people);
 
   for (size_t person_idx = 0; person_idx < num_people; person_idx++)
   {
@@ -216,7 +248,7 @@ int main(int argc, char** argv)
   g_num_scales = getParam(local_nh, "num_scales", 1);
   g_scale_gap = getParam(local_nh, "scale_gap", 0.3);
   unsigned int num_gpu_start = getParam(local_nh, "num_gpu_start", 0);
-  std::string model_folder = getParam(local_nh, "model_folder", std::string("~/openpose/models"));
+  std::string model_folder = getParam(local_nh, "model_folder", std::string("/home/stevenjj/nstrf_ws/src/openpose_ros/openpose/models/"));
   op::PoseModel pose_model = stringToPoseModel(getParam(local_nh, "pose_model", std::string("COCO")));
   g_bodypart_map = getBodyPartMapFromPoseModel(pose_model);
 
@@ -229,6 +261,13 @@ int main(int argc, char** argv)
 
         new op::PoseExtractorCaffe(g_net_input_size, net_output_size, output_size, g_num_scales, pose_model, 
                                             model_folder, num_gpu_start));
+
+  poseRenderer = std::shared_ptr<op::PoseRenderer>(
+      new op::PoseRenderer(net_output_size, output_size, pose_model, nullptr, true, 0.6));
+      //poseRenderer{netOutputSize, outputSize, poseModel, nullptr, !FLAGS_disable_blending, (float)FLAGS_alpha_pose};
+
+  g_pose_extractor->initializationOnThread();
+  poseRenderer->initializationOnThread();
   ros::spin();
 
   return 0;
