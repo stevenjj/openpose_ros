@@ -148,7 +148,7 @@ bool detectPosesCallback(openpose_ros_msgs::GetPersons::Request& req, openpose_r
   // VISUALIZE OUTPUT
   //const auto poseKeypoints = g_pose_extractor->getPoseKeypoints();
 
-  op::Point<int> outputSize(1280, 720);
+  op::Point<int> outputSize(1024, 1024);
   op::CvMatToOpOutput cvMatToOpOutput{outputSize};
   op::OpOutputToCvMat opOutputToCvMat{outputSize};
 
@@ -261,7 +261,8 @@ int main(int argc, char** argv)
   g_net_input_size.y = getParam(local_nh, "net_input_height", 368);
 
   op::Point<int> net_output_size(getParam(local_nh, "net_output_width", 656), getParam(local_nh, "net_output_height", 368));
-  op::Point<int> output_size(getParam(local_nh, "output_width", 1280), getParam(local_nh, "output_height", 720));
+  //op::Point<int> output_size(getParam(local_nh, "output_width", 1280), getParam(local_nh, "output_height", 720));
+  op::Point<int> output_size(getParam(local_nh, "output_width", 1024), getParam(local_nh, "output_height", 1024));  
   g_num_scales = getParam(local_nh, "num_scales", 1);
   g_scale_gap = getParam(local_nh, "scale_gap", 0.3);
   unsigned int num_gpu_start = getParam(local_nh, "num_gpu_start", 0);
