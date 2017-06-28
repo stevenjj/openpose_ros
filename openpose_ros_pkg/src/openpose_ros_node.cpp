@@ -1,5 +1,5 @@
 //#define USE_CAFFE
-#include <openpose/pose/poseExtractor.hpp>
+/*#include <openpose/pose/poseExtractor.hpp>
 #include <openpose/pose/poseExtractorCaffe.hpp>
 #include <openpose/pose/poseParameters.hpp>
 
@@ -8,6 +8,8 @@
 #include <openpose/gui/headers.hpp>
 #include <openpose/pose/headers.hpp>
 #include <openpose/utilities/headers.hpp>
+*/
+#include <openpose/headers.hpp>
 
 #include <std_srvs/Empty.h>
 #include <ros/node_handle.h>
@@ -16,15 +18,12 @@
 #include <cv_bridge/cv_bridge.h>
 
 #include <openpose_ros_msgs/GetPersons.h>
-//#include <image_recognition_msgs/GetPersons.h>
 
 std::shared_ptr<op::PoseExtractor> g_pose_extractor;
-std::map<unsigned char, std::string> g_bodypart_map;
-cv::Size g_net_input_size;
-unsigned int g_num_scales;
+std::map<unsigned int, std::string> g_bodypart_map;
+op::Point<int> g_net_input_size;
+int g_num_scales;
 double g_scale_gap;
-
-/*
 
 //!
 //! \brief getParam Get parameter from node handle
@@ -64,7 +63,7 @@ op::PoseModel stringToPoseModel(const std::string& pose_model_string)
   }
 }
 
-std::map<unsigned char, std::string> getBodyPartMapFromPoseModel(const op::PoseModel& pose_model)
+std::map<unsigned int, std::string> getBodyPartMapFromPoseModel(const op::PoseModel& pose_model)
 {
   if (pose_model == op::PoseModel::COCO_18)
   {
@@ -81,23 +80,23 @@ std::map<unsigned char, std::string> getBodyPartMapFromPoseModel(const op::PoseM
   }
 }
 
-image_recognition_msgs::BodypartDetection getBodyPartDetectionFromArrayAndIndex(const op::Array<float>& array, size_t idx)
+openpose_ros_msgs::BodypartDetection getBodyPartDetectionFromArrayAndIndex(const op::Array<float>& array, size_t idx)
 {
-  image_recognition_msgs::BodypartDetection bodypart;
+  openpose_ros_msgs::BodypartDetection bodypart;
   bodypart.x = array[idx];
   bodypart.y = array[idx+1];
   bodypart.confidence = array[idx+2];
   return bodypart;
 }
 
-image_recognition_msgs::BodypartDetection getNANBodypart()
+openpose_ros_msgs::BodypartDetection getNANBodypart()
 {
-  image_recognition_msgs::BodypartDetection bodypart;
+  openpose_ros_msgs::BodypartDetection bodypart;
   bodypart.confidence = NAN;
   return bodypart;
 }
 
-bool detectPosesCallback(image_recognition_msgs::GetPersons::Request& req, image_recognition_msgs::GetPersons::Response& res)
+bool detectPosesCallback(openpose_ros_msgs::GetPersons::Request& req, openpose_ros_msgs::GetPersons::Response& res)
 {
   ROS_INFO("detectPosesCallback");
 
@@ -114,14 +113,19 @@ bool detectPosesCallback(image_recognition_msgs::GetPersons::Request& req, image
   }
   cv::Mat image = cv_ptr->image;
 
-  ROS_INFO_STREAM("Perform forward pass with the following settings:");
+/*  ROS_INFO_STREAM("Perform forward pass with the following settings:");
   ROS_INFO_STREAM("- net_input_size: " << g_net_input_size);
   ROS_INFO_STREAM("- num_scales: " << g_num_scales);
   ROS_INFO_STREAM("- scale_gap: " << g_scale_gap);
-  ROS_INFO_STREAM("- image_size: " << image.size());
+  ROS_INFO_STREAM("- image_size: " << image.size())*/;
   op::CvMatToOpInput cv_mat_to_op_input(g_net_input_size, g_num_scales, g_scale_gap);
+//  g_pose_extractor->forwardPass(cv_mat_to_op_input.format(image), image.size());
 
-  g_pose_extractor->forwardPass(cv_mat_to_op_input.format(image), image.size());
+  op::Array<float> netInputArray;
+  std::vector<float> scaleRatios;
+  std::tie(netInputArray, scaleRatios) = cv_mat_to_op_input.format(image);
+  g_pose_extractor->forwardPass(netInputArray,  {image.cols, image.rows}, scaleRatios);
+
   ROS_INFO("g_pose_extractor->forwardPass done");
 
   const op::Array<float> poses;
@@ -137,7 +141,7 @@ bool detectPosesCallback(image_recognition_msgs::GetPersons::Request& req, image
   for (size_t person_idx = 0; person_idx < num_people; person_idx++)
   {
     // Initialize all bodyparts with nan
-    image_recognition_msgs::PersonDetection person_msg;
+    openpose_ros_msgs::PersonDetection person_msg;
     person_msg.nose = getNANBodypart();
     person_msg.neck = getNANBodypart();
     person_msg.right_shoulder = getNANBodypart();
@@ -161,7 +165,7 @@ bool detectPosesCallback(image_recognition_msgs::GetPersons::Request& req, image
     for (size_t bodypart_idx = 0; bodypart_idx < num_bodyparts; bodypart_idx++)
     {
       size_t final_idx = 3*(person_idx*num_bodyparts + bodypart_idx);
-      image_recognition_msgs::BodypartDetection bodypart_detection = getBodyPartDetectionFromArrayAndIndex(poses, final_idx);
+      openpose_ros_msgs::BodypartDetection bodypart_detection = getBodyPartDetectionFromArrayAndIndex(poses, final_idx);
 
       std::string body_part_string = g_bodypart_map[bodypart_idx];
 
@@ -199,12 +203,16 @@ bool detectPosesCallback(image_recognition_msgs::GetPersons::Request& req, image
 
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "image_recognition_msgs");
+  ros::init(argc, argv, "openpose_ros_service_node");  
 
   ros::NodeHandle local_nh("~");
-  g_net_input_size = cv::Size(getParam(local_nh, "net_input_width", 656), getParam(local_nh, "net_input_height", 368));
-  cv::Size net_output_size(getParam(local_nh, "net_output_width", 656), getParam(local_nh, "net_output_height", 368));
-  cv::Size output_size(getParam(local_nh, "output_width", 1280), getParam(local_nh, "output_height", 720));
+//  g_net_input_size = op::Point(getParam(local_nh, "net_input_width", 656), getParam(local_nh, "net_input_height", 368));
+
+  g_net_input_size.x = getParam(local_nh, "net_input_width", 656);
+  g_net_input_size.y = getParam(local_nh, "net_input_height", 368);
+
+  op::Point<int> net_output_size(getParam(local_nh, "net_output_width", 656), getParam(local_nh, "net_output_height", 368));
+  op::Point<int> output_size(getParam(local_nh, "output_width", 1280), getParam(local_nh, "output_height", 720));
   g_num_scales = getParam(local_nh, "num_scales", 1);
   g_scale_gap = getParam(local_nh, "scale_gap", 0.3);
   unsigned int num_gpu_start = getParam(local_nh, "num_gpu_start", 0);
@@ -216,38 +224,14 @@ int main(int argc, char** argv)
   ros::ServiceServer service = nh.advertiseService("detect_poses", detectPosesCallback);
 
   g_pose_extractor = std::shared_ptr<op::PoseExtractorCaffe>(
-        new op::PoseExtractorCaffe(g_net_input_size, net_output_size, output_size, g_num_scales,
-                                   g_scale_gap, pose_model, model_folder, num_gpu_start));
+/*        new op::PoseExtractorCaffe(g_net_input_size, net_output_size, output_size, g_num_scales,
+                                   g_scale_gap, pose_model, model_folder, num_gpu_start));*/
 
+        new op::PoseExtractorCaffe(g_net_input_size, net_output_size, output_size, g_num_scales, pose_model, 
+                                            model_folder, num_gpu_start));
   ros::spin();
 
   return 0;
 }
-*/
-int main(int argc, char** argv)
-{
-  ros::init(argc, argv, "image_recognition_msgs");
 
-/*
-  ros::NodeHandle local_nh("~");
-  g_net_input_size = cv::Size(getParam(local_nh, "net_input_width", 656), getParam(local_nh, "net_input_height", 368));
-  cv::Size net_output_size(getParam(local_nh, "net_output_width", 656), getParam(local_nh, "net_output_height", 368));
-  cv::Size output_size(getParam(local_nh, "output_width", 1280), getParam(local_nh, "output_height", 720));
-  g_num_scales = getParam(local_nh, "num_scales", 1);
-  g_scale_gap = getParam(local_nh, "scale_gap", 0.3);
-  unsigned int num_gpu_start = getParam(local_nh, "num_gpu_start", 0);
-  std::string model_folder = getParam(local_nh, "model_folder", std::string("~/openpose/models"));
-  op::PoseModel pose_model = stringToPoseModel(getParam(local_nh, "pose_model", std::string("COCO")));
-  g_bodypart_map = getBodyPartMapFromPoseModel(pose_model);
 
-  ros::NodeHandle nh;
-  ros::ServiceServer service = nh.advertiseService("detect_poses", detectPosesCallback);
-
-  g_pose_extractor = std::shared_ptr<op::PoseExtractorCaffe>(
-        new op::PoseExtractorCaffe(g_net_input_size, net_output_size, output_size, g_num_scales,
-                                   g_scale_gap, pose_model, model_folder, num_gpu_start));
-*/
-  ros::spin();
-
-  return 0;
-}

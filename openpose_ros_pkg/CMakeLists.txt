@@ -66,5 +66,8 @@ target_link_libraries(openpose_ros ${catkin_LIBRARIES}
 
 add_executable(openpose_ros_node src/openpose_ros_node.cpp)
 target_link_libraries(openpose_ros_node ${catkin_LIBRARIES} 
-										${OPENPOSE_LIBRARY}) 
+										${OPENPOSE_LIBRARY}
+										${CAFFE_LIBRARY} 
+										${CUDA_LIBRARY} 
+										)							
 add_dependencies(openpose_ros_node ${catkin_EXPORTED_TARGETS})
