@@ -15,6 +15,7 @@
 #include <ros/init.h>
 #include <cv_bridge/cv_bridge.h>
 
+#include <openpose_ros_msgs/GetPersons.h>
 //#include <image_recognition_msgs/GetPersons.h>
 
 std::shared_ptr<op::PoseExtractor> g_pose_extractor;
