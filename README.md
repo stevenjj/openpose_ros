@@ -8,4 +8,5 @@
 roscd openpose_ros_pkg/../openpose
 rosrun openpose_ros_pkg openpose_ros --image_dir examples/media/
 ````
-
+3. To start the ros service run:
+rosrun openpose_ros_pkg openpose_ros_node 
