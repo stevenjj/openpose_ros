@@ -16,6 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
 	roscpp
 	cv_bridge
 	openpose_ros_msgs
+	roslib
 )
 
 ###################################
@@ -31,7 +32,8 @@ catkin_package(
   CATKIN_DEPENDS std_msgs 
   				 roscpp
   				 cv_bridge
-			 	 openpose_ros_msgs  				 
+			 	 openpose_ros_msgs  	
+			 	 roslib			 
 )
 
 ###########
@@ -72,3 +74,8 @@ target_link_libraries(openpose_ros_node ${catkin_LIBRARIES}
 										${CUDA_LIBRARY} 
 										)							
 add_dependencies(openpose_ros_node ${catkin_EXPORTED_TARGETS})
+
+
+add_executable(test_openpose_ros_service_call src/test_openpose_ros_service_call.cpp) 
+target_link_libraries(test_openpose_ros_service_call ${catkin_LIBRARIES})
+add_dependencies(test_openpose_ros_service_call ${catkin_EXPORTED_TARGETS})
