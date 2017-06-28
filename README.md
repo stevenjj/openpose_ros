@@ -5,7 +5,7 @@
 ````
 2. If everything succeeds, run `catkin build`, source your workspace then:
 ````
-roscd openpose_ros/openpose
-rosrun openpose_ros openpose_ros --image_dir examples/media/
+roscd openpose_ros_pkg/../openpose
+rosrun openpose_ros_pkg openpose_ros --image_dir examples/media/
 ````
 
