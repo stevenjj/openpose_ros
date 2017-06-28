@@ -17,6 +17,8 @@
 #include <ros/init.h>
 #include <cv_bridge/cv_bridge.h>
 
+
+#include <sensor_msgs/Image.h>
 #include <openpose_ros_msgs/GetPersons.h>
 
 std::shared_ptr<op::PoseExtractor> g_pose_extractor;
@@ -26,6 +28,7 @@ op::Point<int> g_net_input_size;
 int g_num_scales;
 double g_scale_gap;
 
+ros::Publisher           image_skeleton_pub;
 //!
 //! \brief getParam Get parameter from node handle
 //! \param nh The nodehandle
@@ -153,7 +156,16 @@ bool detectPosesCallback(openpose_ros_msgs::GetPersons::Request& req, openpose_r
 
   poseRenderer->renderPose(outputArray, poseKeypoints);
   auto outputImage = opOutputToCvMat.formatToCvMat(outputArray);
-  frameDisplayer.displayFrame(outputImage, 0); // Alternative: cv::imshow(outputImage) + cv::waitKey(0)
+
+
+  sensor_msgs::Image ros_image;
+  cv_bridge::CvImagePtr cv_ptr_out = cv_bridge::toCvCopy(req.image, req.image.encoding);
+  cv_ptr_out->image = outputImage;
+  ros_image = *(cv_ptr_out->toImageMsg());
+
+
+  //frameDisplayer.displayFrame(outputImage, 0); // Alternative: cv::imshow(outputImage) + cv::waitKey(0)
+  image_skeleton_pub.publish(ros_image);
 
   // VIsualizeOutput
 
@@ -254,6 +266,9 @@ int main(int argc, char** argv)
 
   ros::NodeHandle nh;
   ros::ServiceServer service = nh.advertiseService("detect_poses", detectPosesCallback);
+
+
+  image_skeleton_pub = nh.advertise<sensor_msgs::Image>( "/openpose_ros/detected_poses_image", 0 );  
 
   g_pose_extractor = std::shared_ptr<op::PoseExtractorCaffe>(
 /*        new op::PoseExtractorCaffe(g_net_input_size, net_output_size, output_size, g_num_scales,
