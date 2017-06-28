@@ -17,3 +17,10 @@ rosrun openpose_ros_pkg openpose_ros_node
 rosrun openpose_ros_pkg test_openpose_ros_service_call 
 ````
 and subscribe to `/openpose_ros/input_image` for the input image and `/openpose_ros/detected_poses_image` for the output image
+
+
+# Similar packages
+Naturally, `openpose` is quite popular and similar packages for ros can be found on
+
+https://github.com/tue-robotics/openpose_ros
+https://github.com/firephinx/openpose_ros
