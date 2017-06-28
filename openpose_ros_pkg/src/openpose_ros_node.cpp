@@ -17,6 +17,7 @@
 #include <ros/init.h>
 #include <cv_bridge/cv_bridge.h>
 
+#include <ros/package.h>
 
 #include <sensor_msgs/Image.h>
 #include <openpose_ros_msgs/GetPersons.h>
@@ -119,7 +120,9 @@ bool detectPosesCallback(openpose_ros_msgs::GetPersons::Request& req, openpose_r
 
   cv::Mat image = cv_ptr->image;
 
-//  cv::Mat image = op::loadImage("/home/stevenjj/nstrf_ws/src/openpose_ros/openpose/examples/media/COCO_val2014_000000000192.jpg", CV_LOAD_IMAGE_COLOR);
+//  std::string path = ros::package::getPath("openpose_ros_pkg");
+//  std::string filename = path + "/examples/COCO_val2014_000000000192.jpg";
+//  cv::Mat image = op::loadImage(filename, CV_LOAD_IMAGE_COLOR);
 
   ROS_INFO("Parsed image");
   ROS_INFO_STREAM("Perform forward pass with the following settings:");
@@ -276,7 +279,13 @@ int main(int argc, char** argv)
   g_num_scales = getParam(local_nh, "num_scales", 1);
   g_scale_gap = getParam(local_nh, "scale_gap", 0.3);
   unsigned int num_gpu_start = getParam(local_nh, "num_gpu_start", 0);
-  std::string model_folder = getParam(local_nh, "model_folder", std::string("/home/stevenjj/nstrf_ws/src/openpose_ros/openpose/models/"));
+
+
+
+  std::string package_path = ros::package::getPath("openpose_ros_pkg");
+  std::string folder_location = package_path + "/../openpose/models/";
+
+  std::string model_folder = getParam(local_nh, "model_folder", folder_location);
   op::PoseModel pose_model = stringToPoseModel(getParam(local_nh, "pose_model", std::string("COCO")));
   g_bodypart_map = getBodyPartMapFromPoseModel(pose_model);
 
