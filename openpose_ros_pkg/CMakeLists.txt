@@ -53,12 +53,6 @@ FIND_LIBRARY(CUDA_LIBRARY cuda ../openpose/build/lib)
 FIND_LIBRARY(GFLAGS_LIBRARY gflags /usr/lib/x86_64-linux-gnu)
 FIND_LIBRARY(GLOG_LIBRARY glog /usr/lib/x86_64-linux-gnu)
 
-add_executable(openpose_ros_talker_node src/talker.cpp)
-target_link_libraries(openpose_ros_talker_node ${catkin_LIBRARIES} 
-												  ${OPENPOSE_LIBRARY} 
-												  ${CAFFE_LIBRARY} 
-												  ${CUDA_LIBRARY})
-
 add_executable(openpose_ros src/openpose.cpp)
 target_link_libraries(openpose_ros ${catkin_LIBRARIES} 
 													${OPENPOSE_LIBRARY} 
