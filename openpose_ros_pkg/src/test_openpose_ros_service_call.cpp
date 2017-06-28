@@ -1,24 +1,22 @@
-// This code rotates the image by 180 degrees and reverses the order of the pointcloud.
-//      The object detection module is sensitive to the rotation of the camera as it expects objects to be right side up
-//      Reversing the order of the pointcloud is necessary for corresponding the 2D bounding box to the 3D points
+// This code tests the openpose rosservice node by loading an image and calling the service.#include <ros/ros.h>
 #include <ros/ros.h>
 #include <ros/package.h>
 #include <sensor_msgs/Image.h>
 #include <cv_bridge/cv_bridge.h>
 #include <opencv2/highgui/highgui.hpp>
 #include <openpose_ros_msgs/GetPersons.h>
-// Declare Publishers
-
-// Declare Service Client
-ros::ServiceClient client;
-openpose_ros_msgs::GetPersons srv;
 
 int main(int argc, char** argv){
     // Initialize ROS
     ros::init(argc, argv, "test_openpose_ros_service_call");
     // Declare Node Handle
     ros::NodeHandle nh;
+    
+    // Declare Service
     ros::ServiceClient client = nh.serviceClient<openpose_ros_msgs::GetPersons>("detect_poses");
+    openpose_ros_msgs::GetPersons srv;
+
+    // Declare Publisher
     ros::Publisher input_image_pub  = nh.advertise<sensor_msgs::Image>( "/openpose_ros/input_image", 0 );  
 
     // Initialize cv_ptr
