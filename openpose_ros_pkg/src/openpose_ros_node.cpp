@@ -308,6 +308,8 @@ int main(int argc, char** argv)
 
   g_pose_extractor->initializationOnThread();
   poseRenderer->initializationOnThread();
+
+  ROS_INFO("Initialization Successful!");
   ros::spin();
 
   return 0;
