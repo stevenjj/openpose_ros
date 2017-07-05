@@ -32,6 +32,21 @@ void callback(const sensor_msgs::PointCloud2ConstPtr& cloud_msg, const sensor_ms
       if (client.call(srv))
       {
         ROS_INFO("ROS Service call Successful");
+        // Prepare a new ROS Message for all skeletal detections
+        // Prepare a new point cloud to publish
+
+        // for each detection,
+          // Prepare a new ROS Message for this skeletal detection
+          // Prepare a new color to use
+
+          // for each body part 
+              // grab a small area of pixels surrounding the x,y image coordinate
+
+                  //for each pixel in that area, check if it is a valid point: (the point exists in the organized point cloud and that its z-depth is less than Z_MAX)
+                  //      mean-shift valid 3D points and store largest cluster
+
+                  //      
+
 //        ROS_INFO("Hello!: %ld", (long int)srv.response.sum);
       }
       else
