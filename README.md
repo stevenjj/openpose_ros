@@ -27,10 +27,8 @@ and subscribe to `/openpose_ros/input_image` for the input image and `/openpose_
 
 # Similar packages
 Naturally, `openpose` is quite popular and similar packages for ros can be found at
-
-https://github.com/tue-robotics/openpose_ros
-
-https://github.com/firephinx/openpose_ros
+* https://github.com/tue-robotics/openpose_ros
+* https://github.com/firephinx/openpose_ros
 
 # System
 * Ubuntu 14.04.5 LTS 64-bit
