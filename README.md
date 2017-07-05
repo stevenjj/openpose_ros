@@ -31,3 +31,10 @@ Naturally, `openpose` is quite popular and similar packages for ros can be found
 https://github.com/tue-robotics/openpose_ros
 
 https://github.com/firephinx/openpose_ros
+
+# System
+* Ubuntu 14.04.5 LTS 64-bit
+* NVIDIA Titan XP (Proprietary Driver 381.09)
+* CUDA 8.0 
+* cuDNN
+* ROS Indigo
