@@ -27,8 +27,13 @@ Run `catkin build` and source your workspace again then run:
 rosrun openpose_ros_pkg openpose_ros_node_firephinx
 ````
 If this works, you should see an openCV visualization open up:
+![alt text]https://raw.githubusercontent.com/stevenjj/openpose_ros/master/example_output.png
 
-
+4. You may change the image resolution output by going back to `src/openpose_ros_node_firephinx.cpp` and change the parameters
+````
+#define OUTPUT_RES_X 1280 // Display Resolution Output Width
+#define OUTPUT_RES_Y 720  // Display Resolution Output Height
+````
 ## Example Service Code
 1. To start the ros service run:
 ````
