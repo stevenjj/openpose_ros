@@ -137,8 +137,11 @@ bool detectPosesCallback(openpose_ros_msgs::GetPersons::Request& req, openpose_r
 
   op::Array<float> netInputArray;
   std::vector<float> scaleRatios;
+  
   std::tie(netInputArray, scaleRatios) = cv_mat_to_op_input.format(image);
   ROS_INFO("Preparing for forward pass");
+
+
   g_pose_extractor->forwardPass(netInputArray,  {image.cols, image.rows}, scaleRatios);
 
   ROS_INFO("g_pose_extractor->forwardPass done");

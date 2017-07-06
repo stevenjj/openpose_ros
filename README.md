@@ -11,15 +11,33 @@ My ROS Wrapper for openpose https://github.com/CMU-Perceptual-Computing-Lab/open
 roscd openpose_ros_pkg/../openpose
 rosrun openpose_ros_pkg openpose_ros --image_dir examples/media/
 ````
-3. To start the ros service run:
+
+3. Go to `src/openpose_ros_node_firephinx.cpp` and edit the lines:
+````
+// Camera Topic
+DEFINE_string(camera_topic,             "/multisense/left/image_rect_color_rotated_180",      "Image topic that OpenPose will process.");
+````
+Change the string accordingly. camera_topic should be the ros sensor_msgs::Image topic you subscribe to. For example `"/camera/image_raw"`
+
+Run `catkin build` and source your workspace again then run:
+````
+rosrun openpose_ros_pkg openpose_ros_node_firephinx
+````
+If this works, you should see an openCV visualization open up:
+
+
+## Example Service Code
+1. To start the ros service run:
 ````
 rosrun openpose_ros_pkg openpose_ros_node 
 ````
-4. To test if the service is working run:
+2. To test if the service is working run:
 ````
 rosrun openpose_ros_pkg test_openpose_ros_service_call 
 ````
 and subscribe to `/openpose_ros/input_image` for the input image and `/openpose_ros/detected_poses_image` for the output image
+
+
 
 
 # Similar packages

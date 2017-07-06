@@ -17,6 +17,7 @@ find_package(catkin REQUIRED COMPONENTS
 	cv_bridge
 	openpose_ros_msgs
 	roslib
+	image_transport
 )
 
 ###################################
@@ -33,7 +34,8 @@ catkin_package(
   				 roscpp
   				 cv_bridge
 			 	 openpose_ros_msgs  	
-			 	 roslib			 
+			 	 roslib
+			 	 image_transport			 
 )
 
 ###########
@@ -68,6 +70,15 @@ target_link_libraries(openpose_ros_node ${catkin_LIBRARIES}
 										${CUDA_LIBRARY} 
 										)							
 add_dependencies(openpose_ros_node ${catkin_EXPORTED_TARGETS})
+
+add_executable(openpose_ros_node_firephinx src/openpose_ros_node_firephinx.cpp)
+target_link_libraries(openpose_ros_node_firephinx ${catkin_LIBRARIES} 
+										${OPENPOSE_LIBRARY}
+										${CAFFE_LIBRARY}
+										${CUDA_LIBRARY} 										 
+										${GFLAGS_LIBRARY} 
+										${GLOG_LIBRARY})						
+add_dependencies(openpose_ros_node_firephinx ${catkin_EXPORTED_TARGETS})
 
 
 add_executable(test_openpose_ros_service_call src/test_openpose_ros_service_call.cpp) 
