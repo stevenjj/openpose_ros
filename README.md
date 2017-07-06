@@ -15,7 +15,7 @@ roscd openpose_ros_pkg/../openpose
 rosrun openpose_ros_pkg openpose_ros --image_dir examples/media/
 ````
 
-3. Go to `src/openpose_ros_node_firephinx.cpp` and edit the lines:
+3. To test with your ROS sensor_msgs::Image topic, go to `src/openpose_ros_node_firephinx.cpp` and edit the lines:
 ````
 // Camera Topic
 DEFINE_string(camera_topic,             "/multisense/left/image_rect_color_rotated_180",      "Image topic that OpenPose will process.");
