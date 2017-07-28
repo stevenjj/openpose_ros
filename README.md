@@ -212,6 +212,8 @@ Undergraduate student at CFIS-UPC (Barcelona Tech, Spain).
 
 CFIS-UPC: https://cfis.upc.edu/es
 
+Barcelona Tech: http://www.upc.edu/?set_language=en
+
 # Citation
 Please cite the tech report if it helps in your publications:
 
