@@ -191,7 +191,7 @@ You can also select the pointcloud at the same time:
 
 * **/openpose_ros/skeleton_3d/input_pointcloud:** Here is published the point-cloud that is synchronized with the RGB image from where we extract the x,y, z real world coordinates of the keypoints.
 
-![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros/master/readme_images/Fig18.png)
+![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros-1/master/readme_images/Fig18.png)
 
 * **/openpose_ros/skeleton_3d/input_rgb:** the RGB image that we use to make the 2d detections is published in this topic and it is synchronized with the input point-cloud.
 
