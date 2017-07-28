@@ -3,7 +3,7 @@ ROS wrapper for OpenPose ( https://github.com/CMU-Perceptual-Computing-Lab/openp
 
 When a depth image is synchronized with the RGB image (RGB-D image), a 3d extractor node has been implemented to obtain 3d pose estimation from the 2d pose estimation given by OpenPose through the projection of the 2d pose estimation onto the point-cloud of the depth image. Also, a visualization node for the 3d results has been implemented.
 
-![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros/master/readme_images/Fig1.png)
+![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros-1/master/readme_images/Fig1.png)
 
 # Installing Openpose ROS Wrapper
 
@@ -33,11 +33,11 @@ First of all, you might want to change some things in the code to adapt it to yo
 
 * Go to `/openpose_ros_pkg/src/openpose_ros_node_firephinx.cpp`, and change `/usb_cam/image_raw` for the topic your camera is publishing the `sensor_msgs::Image` messages to:
 
-![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros/master/readme_images/Fig2.png)
+![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros-1/master/readme_images/Fig2.png)
 
 * You may change the output image resolution. To do so, `/openpose_ros_pkg/src/openpose_ros_node_firephinx.cpp` and change:
 
-![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros/master/readme_images/Fig3.png)
+![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros-1/master/readme_images/Fig3.png)
 
 Once you have set those parameters repeat step 3 of installation.
 
@@ -48,7 +48,7 @@ roslaunch usb_cam usb_cam-test.launch
 
 You should get the something like:
 
-![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros/master/readme_images/Fig4.png)
+![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros-1/master/readme_images/Fig4.png)
 
 Then, initialize the 2d detection service node:
 ````
@@ -64,7 +64,7 @@ rosrun openpose_ros_pkg openpose_ros_node_firephinx
 ````
 You should obtain something similar to:
 
-![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros/master/readme_images/Fig5.png)
+![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros-1/master/readme_images/Fig5.png)
 
 ### Topics
 
@@ -77,11 +77,11 @@ If everything is running correctly, the package should be publishing in the topi
 
 * **/openpose_ros/input_image:** The images the 2d detection node is taking to make the segmentation are published here.
 
-![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros/master/readme_images/Fig6.png)
+![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros-1/master/readme_images/Fig6.png)
 
 * **/openpose_ros/detected_poses_image:** Images with the segmentation skeleton drawn in it are published here.
 
-![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros/master/readme_images/Fig7.png)
+![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros-1/master/readme_images/Fig7.png)
 
 * **/openpose_ros/detected_poses_keypoints:** In this topic, the messages with the 2d detections keypoints (openpose bodyjoints) are being published. The messages have the following fields:
   * num_people_detected: number of people that are in the image.
@@ -93,7 +93,7 @@ If everything is running correctly, the package should be publishing in the topi
     
 If you write the data in a csv it should be like this:
 
-![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros/master/readme_images/Fig8.png)
+![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros-1/master/readme_images/Fig8.png)
 
 ## 3d Detection Module
 This module is composed of the same 2d extractor node described in the previous section, a node for getting 3d pose detection and a node for visualization of the output in RViz. We can see the resulting 3d human skeleton and the resulting 3d detections for the joints or both at the same time with the visualization node. An RGB-D camera is needed to run this module.
@@ -102,21 +102,21 @@ First of all you might want to change some things in the code to adapt it to you
 
 * Go to `/skeleton_extract_3d/launch/openpose_skeleton_extract.launch`. You will see this:
 
-![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros/master/readme_images/Fig9.png)
+![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros-1/master/readme_images/Fig9.png)
 
  *Here you should change `/usb_cam_3d/image_raw/` for the topic your camera will be publishing the `sensor_msgs::Image` messages    (RGB images). You should also change `/kinect2/qhd/points` for the topic your camera will be publishing the  `sensor_msgs::Pointcloud2` messages (depth images).
  
 * Go to `/skeleton_extract_3d/src/skeleton_extract_3d_node.cpp` and set the input resolution of the images (the resolution of the depth and the RGB images must be the same):
 
-![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros/master/readme_images/Fig10.png)
+![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros-1/master/readme_images/Fig10.png)
 
 * Go to `/skeleton_extract_3d/src/skeleton_extract_3d_visualization_node.cpp`. You might want to change the color, shape, size etc. of the markers. To see the options you have go to http://wiki.ros.org/rviz/DisplayTypes/Marker. To set the options of the bodyjoints:
 
-![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros/master/readme_images/Fig11.png)
+![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros-1/master/readme_images/Fig11.png)
 
 To set the options of the skeleton, go to:
 
-![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros/master/readme_images/Fig12.png)
+![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros-1/master/readme_images/Fig12.png)
 
 Once you have set the options repeat step 3 of the installation process. Now that you have configured it, you can run the code. First of all connect your RGB-D and run the corresponding ROS drivers.
 
@@ -128,7 +128,7 @@ rosrun kinect2_viewer kinect2_viewer
 
 Then you will see the camera output:
 
-![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros/master/readme_images/Fig13.png)
+![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros-1/master/readme_images/Fig13.png)
 
 Once your camera is publishing, launch the 2D extractor node and the 3D extractor node by running:
 ````
@@ -136,7 +136,7 @@ roslaunch roslaunch skeleton_extract_3d openpose_skeleton_extract.launch
 ````
 If everything is working fine you should have something similar to:
 
-![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros/master/readme_images/Fig14.png)
+![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros-1/master/readme_images/Fig14.png)
 
 Then you can run the visualization node:
 ````
@@ -157,11 +157,11 @@ Select the topics:
 ````
 and you should have something similar to:
 
-![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros/master/readme_images/Fig15.png)
+![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros-1/master/readme_images/Fig15.png)
 
 You can also select the pointcloud at the same time:
 
-![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros/master/readme_images/Fig16.png)
+![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros-1/master/readme_images/Fig16.png)
 
 ### Topics
 ````
@@ -187,7 +187,7 @@ You can also select the pointcloud at the same time:
  
  If you write the message in a .csv, it should look like this:
  
- ![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros/master/readme_images/Fig17.png)
+ ![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros-1/master/readme_images/Fig17.png)
 
 * **/openpose_ros/skeleton_3d/input_pointcloud:** Here is published the point-cloud that is synchronized with the RGB image from where we extract the x,y, z real world coordinates of the keypoints.
 
@@ -195,15 +195,15 @@ You can also select the pointcloud at the same time:
 
 * **/openpose_ros/skeleton_3d/input_rgb:** the RGB image that we use to make the 2d detections is published in this topic and it is synchronized with the input point-cloud.
 
-![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros/master/readme_images/Fig19.png)
+![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros-1/master/readme_images/Fig19.png)
 
 * **/openpose_ros/skeleton_3d/visualization_markers:** the markers to visualize in RViz the 3d detections of the joints are published in this topic.
 
-![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros/master/readme_images/Fig20.png)
+![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros-1/master/readme_images/Fig20.png)
 
 * **/openpose_ros/skeleton_3d/visualization_skeleton:** the skeleton to visualize in RViz the 3d detections is published in this topic.
 
-![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros/master/readme_images/Fig21.png)
+![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros-1/master/readme_images/Fig21.png)
 
 # Author
 Miguel Arduengo García
