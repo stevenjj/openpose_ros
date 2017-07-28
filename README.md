@@ -209,6 +209,7 @@ You can also select the pointcloud at the same time:
 Miguel Arduengo García
 
 Undergraduate student at CFIS-UPC (Barcelona Tech, Spain).
+
 CFIS-UPC: https://cfis.upc.edu/es
 
 # Citation
