@@ -208,9 +208,10 @@ You can also select the pointcloud at the same time:
 # Author
 Miguel Arduengo García
 
-Undergraduate student at CFIS-UPC (Universitat Politècnica de Catalunya)
+Undergraduate student at CFIS-UPC (Barcelona Tech, Spain).
+CFIS-UPC: https://cfis.upc.edu/es
 
 # Citation
 Please cite the tech report if it helps in your publications:
 
-Tech report soon uploaded
+Tech report will be uploaded soon.
