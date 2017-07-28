@@ -116,6 +116,8 @@ First of all you might want to change some things in the code to adapt it to you
 
 To set the options of the skeleton, go to:
 
+![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros-1/master/readme_images/Fig12.png)
+
 Once you have set the options repeat step 3 of the installation process. Now that you have configured it, you can run the code. First of all connect your RGB-D and run the corresponding ROS drivers.
 
 For example you can use a KinectOne and https://github.com/code-iai/iai_kinect2 ROS drivers. To initialize the camera with this drivers run:
