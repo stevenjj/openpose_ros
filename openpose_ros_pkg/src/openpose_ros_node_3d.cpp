@@ -57,7 +57,6 @@ T getParam(const ros::NodeHandle& nh, const std::string& param_name, T default_v
   return value;
 }
 
-
 //declare publisher keypoints_pub
 ros::Publisher           keypoints_pub;
 
@@ -76,7 +75,6 @@ K getParamK(const ros::NodeHandle& nh, const std::string& param_name, K default_
   }
   return value;
 }
-
 
 op::PoseModel stringToPoseModel(const std::string& pose_model_string)
 {
@@ -233,7 +231,6 @@ bool detectPosesCallback(openpose_ros_msgs::GetPersons::Request& req, openpose_r
     //add person ID
     person_msg.person_ID = person_idx;	
 
-
     // Initialize all bodyparts with nan
     // (commented this line) --> openpose_ros_msgs::PersonDetection person_msg;
     person_msg.nose = getNANBodypart();
@@ -292,7 +289,7 @@ bool detectPosesCallback(openpose_ros_msgs::GetPersons::Request& req, openpose_r
       ROS_INFO("            (x, y, confidence): %i, %i, %f", bodypart_detection.x, bodypart_detection.y, bodypart_detection.confidence);
 
     }
-      
+  
       //publish keypoints data of person_msg	
       keypoints_pub.publish(person_msg);
 
@@ -307,7 +304,7 @@ bool detectPosesCallback(openpose_ros_msgs::GetPersons::Request& req, openpose_r
 
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "openpose_ros_service_node");  
+  ros::init(argc, argv, "openpose_ros_service_node_3d");  
 
   ros::NodeHandle local_nh("~");
 //  g_net_input_size = op::Point(getParam(local_nh, "net_input_width", 656), getParam(local_nh, "net_input_height", 368));
@@ -336,12 +333,12 @@ int main(int argc, char** argv)
 
   ros::NodeHandle nh;
 
-  ros::ServiceServer service = nh.advertiseService("detect_poses", detectPosesCallback);
+  ros::ServiceServer service = nh.advertiseService("detect_poses_3d", detectPosesCallback);
 
-  image_skeleton_pub = nh.advertise<sensor_msgs::Image>( "/openpose_ros/detected_poses_image", 0 );  
+  image_skeleton_pub = nh.advertise<sensor_msgs::Image>( "/openpose_ros/skeleton_3d/detected_poses_image", 0 );  
 
   //declare publisher of type openpose_ros_msgs::PersonDetection in topic /openpose_ros/detected_poses_keypoints
-  keypoints_pub = nh.advertise<openpose_ros_msgs::PersonDetection>( "/openpose_ros/detected_poses_keypoints" , 0 );
+  keypoints_pub = nh.advertise<openpose_ros_msgs::PersonDetection>( "/openpose_ros/skeleton_3d/detected_poses_keypoints" , 0 );
 
   g_pose_extractor = std::shared_ptr<op::PoseExtractorCaffe>(
 /*        new op::PoseExtractorCaffe(g_net_input_size, net_output_size, output_size, g_num_scales,

@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   cv_bridge
   message_filters
   openpose_ros_msgs  
+  visualization_msgs
 )
 
 find_package(PCL 1.7 REQUIRED)
@@ -22,9 +23,14 @@ catkin_package(
 
 include_directories(
 	${PCL_INCLUDE_DIRS}
+	${catkin_INCLUDE_DIRS}
 )
 
 
 add_executable(skeleton_extract_3d_node src/skeleton_extract_3d_node.cpp)
 target_link_libraries(skeleton_extract_3d_node ${catkin_LIBRARIES} ${PCL_LIBRARIES})
 add_dependencies(skeleton_extract_3d_node ${catkin_EXPORTED_TARGETS})
+
+add_executable(skeleton_extract_3d_visualization_node src/skeleton_extract_3d_visualization_node.cpp)
+target_link_libraries(skeleton_extract_3d_visualization_node ${catkin_LIBRARIES})
+add_dependencies(skeleton_extract_3d_visualization_node ${catkin_EXPORTED_TARGETS})

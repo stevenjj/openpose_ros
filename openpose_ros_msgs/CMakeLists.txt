@@ -16,6 +16,8 @@ add_message_files(
    FILES
    BodypartDetection.msg
    PersonDetection.msg
+   BodypartDetection_3d.msg
+   PersonDetection_3d.msg
 )
 
 ## Generate services in the 'srv' folder
