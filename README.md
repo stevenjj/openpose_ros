@@ -41,7 +41,7 @@ First of all, you might want to change some things in the code to adapt it to yo
 
 ![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros-1/master/readme_images/Fig3.png)
 
-Once you have set those parameters repeat step 3 of installation.
+Once you have set those parameters repeat step 4 of installation.
 
 Now you can run the code. First connect a RGB camera and run the corresponding ROS drivers to start to publish the images (they must be image_raw). For example you can connect a webcam and use https://github.com/ros-drivers/usb_cam. With this drivers run:
 ````
@@ -120,7 +120,7 @@ To set the options of the skeleton, go to:
 
 ![alt text](https://raw.githubusercontent.com/MiguelARD/openpose_ros-1/master/readme_images/Fig12.png)
 
-Once you have set the options repeat step 3 of the installation process. Now that you have configured it, you can run the code. First of all connect your RGB-D and run the corresponding ROS drivers.
+Once you have set the options repeat step 4 of the installation process. Now that you have configured it, you can run the code. First of all connect your RGB-D and run the corresponding ROS drivers.
 
 For example you can use a KinectOne and https://github.com/code-iai/iai_kinect2 ROS drivers. To initialize the camera with this drivers run:
 ````
