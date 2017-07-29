@@ -11,11 +11,13 @@ When a depth image is synchronized with the RGB image (RGB-D image), a 3d extrac
 
 **NOTE**: OpenCV 3.2 recommended, as OpenCv 2.4 might cause some errors.
 
-2. Enable the package running in openpose_ros directory:
+2. Install PCL (http://pointclouds.org/downloads/)
+
+3. Enable the package running in openpose_ros directory:
 ````
 ./install_openpose_and_enable_package.sh
 ````
-3. If it succeds, compile:
+4. If it succeds, compile:
 ````
 cd ~/catkin_ws/src
 catkin build
