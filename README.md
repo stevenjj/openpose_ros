@@ -219,4 +219,6 @@ Barcelona Tech: http://www.upc.edu/?set_language=en
 # Citation
 Please cite the tech report if it helps in your publications:
 
-Tech report will be uploaded soon.
+M. Arduengo, F. Moreno-Noguer and G. Alenyà. ROS wrapper for real-time multi-person pose estimation with a single camera. Technical Report IRI-TR-17-02, Institut de Robòtica i Informàtica Industrial, CSIC-UPC, 2017.
+
+https://www.iri.upc.edu/publications/show/1912
