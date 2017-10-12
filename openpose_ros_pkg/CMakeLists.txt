@@ -43,7 +43,7 @@ catkin_package(
 ###########
 include_directories(
 # include
-# ${catkin_INCLUDE_DIRS}
+  ${catkin_INCLUDE_DIRS}
   ${OPENPOSE_INCLUDE_DIRS}
 )
 
@@ -70,6 +70,15 @@ target_link_libraries(openpose_ros_node ${catkin_LIBRARIES}
 										${CUDA_LIBRARY} 
 										)							
 add_dependencies(openpose_ros_node ${catkin_EXPORTED_TARGETS})
+
+add_executable(openpose_ros_node_3d src/openpose_ros_node_3d.cpp)
+target_link_libraries(openpose_ros_node_3d ${catkin_LIBRARIES} 
+										${OPENPOSE_LIBRARY}
+										${CAFFE_LIBRARY} 
+										${CUDA_LIBRARY} 
+										)							
+add_dependencies(openpose_ros_node_3d ${catkin_EXPORTED_TARGETS})
+
 
 add_executable(openpose_ros_node_firephinx src/openpose_ros_node_firephinx.cpp)
 target_link_libraries(openpose_ros_node_firephinx ${catkin_LIBRARIES} 

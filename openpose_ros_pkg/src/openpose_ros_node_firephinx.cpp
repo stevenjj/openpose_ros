@@ -31,6 +31,14 @@
 #include <openpose/pose/headers.hpp>
 #include <openpose/utilities/headers.hpp>
 
+#include <ros/ros.h>
+#include <ros/package.h>
+#include <sensor_msgs/Image.h>
+#include <cv_bridge/cv_bridge.h>
+#include <opencv2/highgui/highgui.hpp>
+#include <openpose_ros_msgs/GetPersons.h>
+
+
 
 //#include <openpose/headers.hpp>
 
@@ -42,7 +50,7 @@ DEFINE_int32(logging_level,             4,              "The logging level. Inte
                                                         " 255 will not output any. Current OpenPose library messages are in the range 0-4: 1 for"
                                                         " low priority messages and 4 for important ones.");
 // Camera Topic
-DEFINE_string(camera_topic,             "/multisense/left/image_rect_color_rotated_180",      "Image topic that OpenPose will process.");
+DEFINE_string(camera_topic,             "/usb_cam/image_raw",      "Image topic that OpenPose will process.");
 // OpenPose
 std::string package_path = ros::package::getPath("openpose_ros_pkg");
 std::string model_folder_location = package_path + "/../openpose/models/";
@@ -145,6 +153,22 @@ int openPoseROSTutorial()
     op::Point<int> netInputSize;
     netInputSize.x = NET_RES_X; //656;
     netInputSize.y = NET_RES_Y; //368;
+    
+    // Declare Node Handle
+    ros::NodeHandle nh;
+
+    // Declare Service
+    ros::ServiceClient client = nh.serviceClient<openpose_ros_msgs::GetPersons>("detect_poses");
+    openpose_ros_msgs::GetPersons srv;
+
+    // Declare Publisher
+    ros::Publisher input_image_pub  = nh.advertise<sensor_msgs::Image>( "/openpose_ros/input_image", 0 );  
+
+    // Initialize cv_ptr
+    sensor_msgs::Image ros_image;
+    ros_image.encoding = sensor_msgs::image_encodings::BGR8;
+    cv_bridge::CvImagePtr cv_ptr;
+    cv_ptr = cv_bridge::toCvCopy(ros_image, sensor_msgs::image_encodings::BGR8);
 
     // netInputSize
     //const auto netInputSize = op::flagsToPoint(FLAGS_net_resolution, "656x368");
@@ -191,7 +215,10 @@ int openPoseROSTutorial()
         if(cvImagePtr != nullptr)
         {
             cv::Mat inputImage = cvImagePtr->image;
-    
+
+	    // Convert to ros Image msg
+    	    ros_image = *(cvImagePtr->toImageMsg());
+
             // Step 2 - Format input image to OpenPose input and output formats
             op::Array<float> netInputArray;
             std::vector<float> scaleRatios;
@@ -201,6 +228,25 @@ int openPoseROSTutorial()
             std::tie(scaleInputToOutput, outputArray) = cvMatToOpOutput.format(inputImage);
             // Step 3 - Estimate poseKeypoints
             ROS_INFO("Performing Forward Pass");
+
+   // Begin Service Call
+   // You need to run the node openpose_ros_node for the service to work
+      srv.request.image = ros_image;
+        if (client.call(srv))
+        {
+          
+          //publish input image, subscribe /openpose_ros/input_image to get the input image
+    	    input_image_pub.publish(ros_image);
+
+	  //subscribe to /openpose_ros/detected_poses_image to get the images
+	  //subscribe to /openpose_ros/detected_poses_keypoints to get the keypoints in (x,y,score) format
+          ROS_INFO("Call Successful");
+        }
+        else
+        {
+          ROS_ERROR("Failed to call service detect_poses");
+        }
+    
             poseExtractorCaffe.forwardPass(netInputArray, {inputImage.cols, inputImage.rows}, scaleRatios);
             std::cout << "Forward Pass Success" << std::endl;
 

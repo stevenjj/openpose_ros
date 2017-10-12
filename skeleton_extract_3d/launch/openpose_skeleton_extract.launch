@@ -1,11 +1,11 @@
 <launch>
   <!-- Launch openpose service-->
-  <node name="openpose_ros_node" pkg="openpose_ros_pkg" type="openpose_ros_node" output="screen" />
+  <node name="openpose_ros_node_3d" pkg="openpose_ros_pkg" type="openpose_ros_node_3d" output="screen" />
   <!-- Launch the skeleton extractor node -->
-  <node name="skeleton_extract_3d_node" pkg="skeleton_extract_3d" type="skeleton_extract_3d_node" >
-    <remap from="~point_cloud" to="/multisense/organized_image_points2_color_reverse_order" />
-    <remap from="~image" to="/multisense/left/image_rect_color_rotated_180" />
-    <remap from="~skeleton_2d_detector" to="detect_poses" />
+  <node name="skeleton_extract_3d_node" pkg="skeleton_extract_3d" type="skeleton_extract_3d_node">
+    <remap from="~point_cloud" to="/kinect2/qhd/points" />
+    <remap from="~image" to="/kinect2/qhd/image_color" />
+    <remap from="~skeleton_2d_detector" to="detect_poses_3d" />
   </node>
 
 </launch>
