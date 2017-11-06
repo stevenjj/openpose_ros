@@ -399,7 +399,9 @@ void callback(const sensor_msgs::PointCloud2ConstPtr& cloud_msg, const sensor_ms
       }
       else
       {
-        ROS_ERROR("Failed to call service detect_poses");
+        ROS_ERROR("Failed to call service detect_poses_3d");
+        ROS_ERROR("Did you remap the service and client names?");
+        ROS_ERROR("This node expects a service called skeleton_2d_detector in which a launch file should have handled the remapping");
       }
 
 }
